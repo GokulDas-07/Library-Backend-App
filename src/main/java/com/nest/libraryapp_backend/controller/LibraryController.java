@@ -24,4 +24,10 @@ public class LibraryController {
     {
         return "Book search page";
     }
+
+    @GetMapping("/view")
+    public String BooksView()
+    {
+        return "Books view page";
+    }
 }
