@@ -30,4 +30,10 @@ public class LibraryController {
     {
         return "Books view page";
     }
+
+    @PostMapping("/delete")
+    public String BookDelete()
+    {
+        return "Delete Book page";
+    }
 }
