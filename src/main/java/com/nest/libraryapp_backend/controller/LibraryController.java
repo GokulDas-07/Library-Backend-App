@@ -1,39 +1,56 @@
 package com.nest.libraryapp_backend.controller;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.nest.libraryapp_backend.dao.BooksDao;
+import com.nest.libraryapp_backend.model.Books;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
+import java.util.List;
 
 @RestController
 public class LibraryController {
+    @Autowired
+    BooksDao dao;
 
     @GetMapping("/")
     public String HomePage()
     {
         return "Welcome to library home page";
     }
-
-    @PostMapping("/entry")
-    public String BookEntry()
+    @CrossOrigin(origins = "*")
+    @PostMapping(path="/entry",consumes = "application/json",produces = "application/json")
+    public HashMap<String,String> BookEntry(@RequestBody Books b)
     {
-        return "Book entry page";
+        HashMap<String,String> map=new HashMap<>();
+        dao.save(b);
+        map.put("status","success");
+        return map;
     }
 
-    @PostMapping("/search")
-    public String BookSearch()
+    @CrossOrigin("*")
+    @PostMapping(path = "/search",consumes = "application/json",produces = "application/json")
+    public List<Books> searchBooks(@RequestBody Books b)
     {
-        return "Book search page";
+        String title=b.getTitle();
+        System.out.println(title);
+        return dao.searchBooks(title);
     }
-
+    @CrossOrigin("*")
     @GetMapping("/view")
-    public String BooksView()
+    public List<Books> viewBooks()
     {
-        return "Books view page";
+        return (List<Books>) dao.findAll();
     }
-
-    @PostMapping("/delete")
-    public String BookDelete()
+    @CrossOrigin("*")
+    @PostMapping(path = "/delete",consumes = "application/json",produces = "application/json")
+    public HashMap<String,String> deleteBook(@RequestBody Books b)
     {
-        return "Delete Book page";
+        HashMap<String ,String> map =new HashMap<>();
+        String bid=String.valueOf(b.getId());
+        System.out.println(bid);
+        dao.deleteBook(b.getId());
+        map.put("status","success");
+        return map;
     }
 }
