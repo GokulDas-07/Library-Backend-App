@@ -1,7 +1,9 @@
 package com.nest.libraryapp_backend.controller;
 
 import com.nest.libraryapp_backend.dao.BooksDao;
+import com.nest.libraryapp_backend.dao.UserDao;
 import com.nest.libraryapp_backend.model.Books;
+import com.nest.libraryapp_backend.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,6 +14,7 @@ import java.util.List;
 public class LibraryController {
     @Autowired
     BooksDao dao;
+    UserDao daou;
 
     @GetMapping("/")
     public String HomePage()
@@ -52,5 +55,16 @@ public class LibraryController {
         dao.deleteBook(b.getId());
         map.put("status","success");
         return map;
+    }
+
+    @CrossOrigin(origins = "*")
+    @PostMapping(path = "userentry",consumes = "application/json",produces = "application/json")
+    public HashMap<String ,String> userEntry(@RequestBody User u)
+    {
+        HashMap<String,String> map=new HashMap<>();
+        daou.save(u);
+        map.put("status","success");
+        return map;
+
     }
 }
